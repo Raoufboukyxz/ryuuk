@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$RYUK - You Picked Up the Coin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Press+Start+2P&display=swap');
+        
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+            overflow-x: hidden;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23ff0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 1.418.376 2.75 1.032 3.9.143.265.276.489.397.662l.06.092c.192.291.304.437.338.477.21.245.355.378.478.461.16.108.327.186.499.234.19.053.382.072.562.072h4.914c.18 0 .372-.019.562-.072.172-.048.34-.126.5-.234.122-.083.267-.216.478-.461.034-.04.146-.186.338-.477l.06-.092c.12-.173.254-.397.397-.662A7.965 7.965 0 0 0 20 10a8 8 0 0 0-8-8z"/></svg>'), auto;
+        }
+        
+        .blood-drip {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blood-drip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, #ff0000, transparent);
+            animation: drip 2s infinite;
+            transform: translateX(-50%);
+        }
+        
+        @keyframes drip {
+            0% { height: 0; opacity: 1; }
+            50% { height: 20px; opacity: 1; }
+            100% { height: 40px; opacity: 0; }
+        }
+        
+        .apple {
+            position: absolute;
+            animation: float 6s infinite ease-in-out;
+            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.7));
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        
+        .glitch::before {
+            color: #0ff;
+            z-index: -1;
+            animation: glitch-effect 3s infinite;
+        }
+        
+        .glitch::after {
+            color: #f0f;
+            z-index: -2;
+            animation: glitch-effect 2s infinite reverse;
+        }
+        
+        @keyframes glitch-effect {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+        
+        .death-note {
+            position: absolute;
+            width: 150px;
+            height: 200px;
+            background: #f5f5dc;
+            transform: rotate(-5deg);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            opacity: 0.7;
+            animation: note-float 8s infinite ease-in-out;
+        }
+        
+        @keyframes note-float {
+            0%, 100% { transform: rotate(-5deg) translateY(0); }
+            50% { transform: rotate(-8deg) translateY(-15px); }
+        }
+        
+        .terminal-line {
+            animation: type 3s steps(40, end), blink 0.75s step-end infinite;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid #ff0000;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+        
+        @keyframes type {
+            from { width: 0; opacity: 1; }
+            to { width: 100%; opacity: 1; }
+        }
+        
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: #ff0000; }
+        }
+        
+        .cursor-quill {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>'), auto;
+        }
+        
+        .cursor-apple {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23ff0000" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 1.418.376 2.75 1.032 3.9.143.265.276.489.397.662l.06.092c.192.291.304.437.338.477.21.245.355.378.478.461.16.108.327.186.499.234.19.053.382.072.562.072h4.914c.18 0 .372-.019.562-.072.172-.048.34-.126.5-.234.122-.083.267-.216.478-.461.034-.04.146-.186.338-.477l.06-.092c.12-.173.254-.397.397-.662A7.965 7.965 0 0 0 20 10a8 8 0 0 0-8-8z"/></svg>'), auto;
+        }
+        
+        .kanji {
+            position: absolute;
+            font-size: 100px;
+            color: rgba(255, 0, 0, 0.1);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+        
+        .whisper {
+            position: relative;
+        }
+        
+        .whisper:hover::after {
+            content: '✧';
+            position: absolute;
+            color: rgba(255, 255, 255, 0.5);
+            animation: whisper 1s ease-out;
+        }
+        
+        @keyframes whisper {
+            0% { opacity: 0; transform: translateY(0); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+        
+        .heartbeat {
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); opacity: 1; }
+            25% { transform: scale(1.05); opacity: 0.8; }
+            50% { transform: scale(1); opacity: 1; }
+            75% { transform: scale(1.03); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .ryuk-silhouette {
+            position: absolute;
+            right: 10%;
+            bottom: 10%;
+            width: 300px;
+            height: 400px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300"><path d="M100,20c-20,0-40,10-40,30c0,20,20,30,40,50c20-20,40-30,40-50C140,30,120,20,100,20z M50,100c-10,0-20,5-20,15c0,10,10,15,20,25c10-10,20-15,20-25C70,105,60,100,50,100z M150,100c-10,0-20,5-20,15c0,10,10,15,20,25c10-10,20-15,20-25C170,105,160,100,150,100z M80,150c-5,0-10,2.5-10,7.5c0,5,5,7.5,10,12.5c5-5,10-7.5,10-12.5C90,152.5,85,150,80,150z M120,150c-5,0-10,2.5-10,7.5c0,5,5,7.5,10,12.5c5-5,10-7.5,10-12.5C130,152.5,125,150,120,150z M100,180c-30,0-60,15-60,45c0,30,30,45,60,75c30-30,60-45,60-75C160,195,130,180,100,180z" fill="%23ff0000" opacity="0.3"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.5;
+            animation: laugh 6s infinite;
+        }
+        
+        @keyframes laugh {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
+        }
+        
+        @media (max-width: 768px) {
+            .ryuk-silhouette {
+                width: 150px;
+                height: 200px;
+                right: 5%;
+                bottom: 5%;
+            }
+            
+            .death-note {
+                width: 80px;
+                height: 120px;
+            }
+            
+            .kanji {
+                font-size: 50px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Background elements -->
+    <div id="apples-container"></div>
+    <div id="death-notes-container"></div>
+    <div id="kanji-container"></div>
+    <div class="ryuk-silhouette"></div>
+    
+    <!-- Hero Section -->
+    <section class="flex-grow flex flex-col items-center justify-center relative py-20 px-4 text-center">
+        <h1 class="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 text-red-600 glitch" data-text="You Picked Up the Coin. Now He's Watching.">
+            You Picked Up the Coin. Now He's Watching.
+        </h1>
+        <p class="text-xl md:text-2xl mb-10 text-gray-300 heartbeat">
+            $RYUK is live on Pump.fun — your fate is sealed.
+        </p>
+        <a href="https://pump.fun" target="_blank" class="blood-drip cursor-apple bg-red-900 hover:bg-red-800 text-white font-bold py-4 px-8 rounded-lg text-lg md:text-xl relative overflow-hidden transition-all duration-300 transform hover:scale-105">
+            Buy on Pump.fun
+        </a>
+    </section>
+    
+    <!-- The Curse Section -->
+    <section class="py-20 px-4 flex flex-col items-center">
+        <div class="max-w-2xl mx-auto text-center">
+            <div class="glitch-box bg-black border border-red-900 p-6 mb-10 cursor-pointer transition-all duration-300 hover:border-red-600 hover:bg-gray-900">
+                <p class="text-sm md:text-base text-gray-300" id="curse-text">This coin has no future.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Death Feed Section -->
+    <section class="py-20 px-4 bg-black bg-opacity-50">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl md:text-3xl text-red-600 mb-8 text-center">Death Feed</h2>
+            <div class="bg-black p-6 rounded-lg border border-red-900 font-mono text-sm md:text-base text-green-400 overflow-hidden">
+                <div id="terminal" class="space-y-2"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-10 px-4 text-center text-red-600 text-sm md:text-base glitch" data-text="No Discord. No X. No Exit.">
+        No Discord. No X. No Exit.
+    </footer>
+    
+    <!-- Audio -->
+    <audio id="heartbeat" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-slow-heartbeat-996.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="whisper">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-ghostly-whisper-283.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // Create floating apples
+        function createApples() {
+            const container = document.getElementById('apples-container');
+            const appleCount = window.innerWidth < 768 ? 10 : 20;
+            
+            for (let i = 0; i < appleCount; i++) {
+                const apple = document.createElement('div');
+                apple.className = 'apple';
+                apple.innerHTML = '🍎';
+                apple.style.left = `${Math.random() * 100}%`;
+                apple.style.top = `${Math.random() * 100}%`;
+                apple.style.fontSize = `${Math.random() * 20 + 10}px`;
+                apple.style.animationDelay = `${Math.random() * 6}s`;
+                container.appendChild(apple);
+            }
+        }
+        
+        // Create floating death notes
+        function createDeathNotes() {
+            const container = document.getElementById('death-notes-container');
+            const noteCount = window.innerWidth < 768 ? 3 : 6;
+            
+            for (let i = 0; i < noteCount; i++) {
+                const note = document.createElement('div');
+                note.className = 'death-note';
+                note.style.left = `${Math.random() * 80 + 10}%`;
+                note.style.top = `${Math.random() * 80 + 10}%`;
+                note.style.animationDelay = `${Math.random() * 8}s`;
+                container.appendChild(note);
+            }
+        }
+        
+        // Create floating kanji characters
+        function createKanji() {
+            const container = document.getElementById('kanji-container');
+            const kanjiCount = window.innerWidth < 768 ? 5 : 10;
+            
+            for (let i = 0; i < kanjiCount; i++) {
+                const kanji = document.createElement('div');
+                kanji.className = 'kanji';
+                kanji.textContent = '死';
+                kanji.style.left = `${Math.random() * 90 + 5}%`;
+                kanji.style.top = `${Math.random() * 90 + 5}%`;
+                kanji.style.transform = `rotate(${Math.random() * 360}deg)`;
+                container.appendChild(kanji);
+                
+                // Make kanji appear on hover
+                kanji.addEventListener('mouseover', () => {
+                    kanji.style.color = 'rgba(255, 0, 0, 0.7)';
+                    kanji.style.transform = `rotate(${Math.random() * 360}deg) scale(1.5)`;
+                });
+                
+                kanji.addEventListener('mouseout', () => {
+                    kanji.style.color = 'rgba(255, 0, 0, 0.1)';
+                    kanji.style.transform = `rotate(${Math.random() * 360}deg) scale(1)`;
+                });
+            }
+        }
+        
+        // Curse text changer
+        const curseTexts = [
+            "This coin has no future.",
+            "Ryuk is bored, and now you're part of the game.",
+            "You wanted meaning? You bought $RYUK.",
+            "The price only goes down from here.",
+            "Your name is already written.",
+            "No refunds. No mercy. No survivors.",
+            "The only exit is death.",
+            "Did you really think you could win?"
+        ];
+        
+        function changeCurseText() {
+            const element = document.getElementById('curse-text');
+            let currentIndex = 0;
+            
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % curseTexts.length;
+                element.textContent = curseTexts[currentIndex];
+            }, 3000);
+        }
+        
+        // Terminal animation
+        const terminalLines = [
+            "0x7f3a...b2c4 bought 420.69 $RYUK - fate accepted",
+            "0x1e9d...7f6a sold 123.45 $RYUK - mistake registered",
+            "0x5c2d...a8e1 transferred 666 $RYUK - judgement pending",
+            "0x3f7b...9d2c bought 13.37 $RYUK - eyes now watching",
+            "0x8e4c...1f5a sold 100.00 $RYUK - regret incoming",
+            "0x2a6e...b3d7 bought 69.42 $RYUK - lifespan decreasing",
+            "0x4d9f...7c2e transferred 333.33 $RYUK - destiny altered",
+            "0x6b1a...e8d5 bought 777.77 $RYUK - final countdown"
+        ];
+        
+        function animateTerminal() {
+            const terminal = document.getElementById('terminal');
+            let currentIndex = 0;
+            
+            function addLine() {
+                if (currentIndex >= terminalLines.length) {
+                    // Remove oldest line if we have too many
+                    if (terminal.children.length > 8) {
+                        terminal.removeChild(terminal.children[0]);
+                    }
+                    
+                    // Add a random line from the array
+                    const randomIndex = Math.floor(Math.random() * terminalLines.length);
+                    const line = document.createElement('div');
+                    line.className = 'terminal-line';
+                    line.style.animationDelay = `${currentIndex * 0.5}s`;
+                    line.textContent = terminalLines[randomIndex];
+                    terminal.appendChild(line);
+                    
+                    // Fade out old lines
+                    if (terminal.children.length > 5) {
+                        for (let i = 0; i < terminal.children.length - 5; i++) {
+                            terminal.children[i].style.opacity = 1 - (i * 0.2);
+                        }
+                    }
+                } else {
+                    // Initial animation with all lines
+                    const line = document.createElement('div');
+                    line.className = 'terminal-line';
+                    line.style.animationDelay = `${currentIndex * 0.5}s`;
+                    line.textContent = terminalLines[currentIndex];
+                    terminal.appendChild(line);
+                }
+                
+                currentIndex++;
+                setTimeout(addLine, 1500);
+            }
+            
+            addLine();
+        }
+        
+        // Whisper effect
+        function setupWhisperEffect() {
+            const whispers = document.querySelectorAll('.whisper');
+            const whisperAudio = document.getElementById('whisper');
+            
+            whispers.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    whisperAudio.currentTime = 0;
+                    whisperAudio.volume = 0.3;
+                    whisperAudio.play().catch(e => console.log('Audio play failed:', e));
+                });
+            });
+        }
+        
+        // Cursor effects
+        function setupCursorEffects() {
+            const buyButton = document.querySelector('.blood-drip');
+            
+            buyButton.addEventListener('mouseenter', () => {
+                document.body.classList.add('cursor-apple');
+            });
+            
+            buyButton.addEventListener('mouseleave', () => {
+                document.body.classList.remove('cursor-apple');
+            });
+            
+            // Add whisper class to random words
+            const words = document.querySelectorAll('h1, h2, p, a, footer');
+            words.forEach(el => {
+                const text = el.textContent;
+                if (text.split(' ').length > 3) {
+                    const words = text.split(' ');
+                    const randomIndex = Math.floor(Math.random() * words.length);
+                    words[randomIndex] = `<span class="whisper">${words[randomIndex]}</span>`;
+                    el.innerHTML = words.join(' ');
+                }
+            });
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            createApples();
+            createDeathNotes();
+            createKanji();
+            changeCurseText();
+            animateTerminal();
+            setupWhisperEffect();
+            setupCursorEffects();
+            
+            // Start heartbeat audio (muted by default due to autoplay policies)
+            const heartbeat = document.getElementById('heartbeat');
+            heartbeat.volume = 0.1;
+            
+            // Try to play audio on user interaction
+            document.body.addEventListener('click', () => {
+                heartbeat.play().catch(e => console.log('Audio play failed:', e));
+            }, { once: true });
+            
+            // Responsive adjustments
+            window.addEventListener('resize', () => {
+                document.getElementById('apples-container').innerHTML = '';
+                document.getElementById('death-notes-container').innerHTML = '';
+                document.getElementById('kanji-container').innerHTML = '';
+                createApples();
+                createDeathNotes();
+                createKanji();
+            });
+        });
+    </script>
+</body>
+</html>
